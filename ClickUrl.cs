@@ -6,18 +6,20 @@ using UnityEngine.Networking;
 public class ClickUrl : MonoBehaviour
 {
     public string url;
-    public void open()
+    
+    public void OpenURL()
     {
-        StartCoroutine(GetRequest(url));
-    }
- 
-    IEnumerator GetRequest(string uri)
+        StartCoroutine(GetRequest());
+    } 
+    IEnumerator GetRequest()
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
-            // Request and wait for the desired page.
             yield return webRequest.SendWebRequest();
- 
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError || webRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Error: " + webRequest.error);
+            }
         }
     }
 }
